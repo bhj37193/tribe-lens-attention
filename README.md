@@ -1,3 +1,15 @@
+---
+title: TRIBE Lens Attention Analyzer
+emoji: 🧠
+colorFrom: red
+colorTo: orange
+sdk: gradio
+sdk_version: "4.0"
+app_file: app.py
+pinned: false
+license: cc-by-nc-4.0
+---
+
 # TRIBE Lens — Attention Analyzer
 
 A personal tool that predicts which attention-relevant brain regions are activated when you consume video or audio content, using Meta Research's TRIBE v2 brain encoding model.

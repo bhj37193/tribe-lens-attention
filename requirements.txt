@@ -1,3 +1,5 @@
+# TRIBE v2 (install from fork — provides the brain encoding model)
+tribev2[plotting] @ git+https://github.com/bhj37193/tribev2.git
 gradio>=4.0
 spaces
 yt-dlp
