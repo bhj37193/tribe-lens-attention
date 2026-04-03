@@ -10,99 +10,146 @@ pinned: false
 license: cc-by-nc-4.0
 ---
 
-# TRIBE Lens — Attention Analyzer
+# TRIBE Lens: Attention Analyzer
 
-A personal tool that predicts which attention-relevant brain regions are activated when you consume video or audio content, using Meta Research's TRIBE v2 brain encoding model.
+TRIBE Lens takes one input that TRIBE v2 can encode, runs Meta Research's TRIBE v2 model on it, averages the predicted cortical response over time, maps those vertex level predictions onto HCP MMP1.0 parcels, groups selected parcels into named attention related networks, and returns two outputs:
 
-Paste a YouTube link or upload a video. Get a rendered brain surface image and a plain-English breakdown of predicted cortical activation across attention networks — grounded in peer-reviewed neuroscience.
+1. a rendered brain surface image
+2. a network table with activation values and source citations
 
-Deploy your own instance using the instructions below.
+Accepted inputs:
+- YouTube URL
+- video file
+- audio file
+- plain text file
+
+Rejected inputs:
+- Instagram and TikTok links
+- images
+
+This is a research interface for model output inspection. It is not a tool for measuring a specific person's brain state.
 
 ---
 
-## What this actually does
+## What the tool does
 
-TRIBE v2 is a deep multimodal brain encoding model from Meta Research that predicts fMRI brain responses to naturalistic stimuli (video, audio, text). It was trained on real human brain recordings and maps multimodal inputs onto the cortical surface.
+TRIBE v2 is a multimodal brain encoding model from Meta Research. Given naturalistic stimuli such as video, audio, or text, it predicts fMRI like cortical responses on the fsaverage5 surface.
 
-This tool takes that raw cortical prediction and translates it into named attention network activations using the HCP MMP1.0 parcellation — the same anatomical brain map used in human neuroscience research.
+This app does not claim to detect attention directly from a webcam, eye tracking stream, or EEG signal. It does one narrower thing.
 
-The output looks like this:
+It takes TRIBE v2's predicted cortical activity and converts that activity into a readable summary across seven named systems:
+
+- Voluntary attention control
+- Mind wandering and attention withdrawal
+- Involuntary attention capture
+- Cognitive effort and working memory
+- Visual processing
+- Auditory and speech processing
+- Language comprehension
+
+Each system score comes from parcel level aggregation, not from a classifier trained to output labels such as "engaged" or "bored."
+
+---
+
+## What the output means
+
+For each run, the app returns a table with four fields:
 
 | Network | Activation | Level | Source |
 |---------|-----------|-------|--------|
 | Voluntary attention control | 0.74 | HIGH | Corbetta & Shulman, 2002 |
-| Mind-wandering / attention withdrawal | 0.22 | LOW | Buckner et al., 2008 |
+| Mind wandering and attention withdrawal | 0.22 | LOW | Buckner et al., 2008 |
 | Involuntary attention capture | 0.61 | MODERATE | Corbetta & Shulman, 2002 |
-| Cognitive effort / working memory | 0.58 | MODERATE | Vincent et al., 2008 |
+| Cognitive effort and working memory | 0.58 | MODERATE | Vincent et al., 2008 |
 | Visual processing | 0.81 | VERY HIGH | Wandell et al., 2007 |
-| Auditory / speech processing | 0.49 | MODERATE | Formisano et al., 2003 |
+| Auditory and speech processing | 0.49 | MODERATE | Formisano et al., 2003 |
 | Language comprehension | 0.55 | MODERATE | Fedorenko et al., 2011 |
 
-Alongside a rendered brain surface image showing predicted activation across both hemispheres.
+Interpret the fields as follows:
+
+- Activation is the aggregated model output for the parcels assigned to that network.
+- Level is a thresholded label derived from the relative distribution across parcels in the same run.
+- Source names the paper used to justify the network label, not a paper that validated this app as a clinical measure.
+
+The brain image shows predicted cortical activation across both hemispheres. It is a visualization of model output, not a medical scan.
 
 ---
 
-## Important disclaimer
+## Limits
 
-These are **in-silico predictions** based on population-average fMRI data. They estimate how a typical brain responds to this type of content on average — not a measurement of your individual brain. This is not a clinical tool and makes no diagnostic claims. All outputs should be interpreted as research-grade signal, not personal neuroimaging.
+These outputs are in silico predictions from a population trained model.
+
+They do not tell you:
+- what a given individual subject actually felt
+- whether a diagnosis is present
+- whether a piece of content is universally "good"
+- whether the model captured causation rather than correlation
+
+They do tell you:
+- what cortical response pattern the model predicts for the supplied input
+- how that pattern distributes across the selected parcel groups
+- which attention related systems appear more active than others within that run
 
 ---
 
 ## Attention networks explained
 
-**Voluntary attention control (Dorsal Attention Network)**
-Activates when you are actively tracking something. High activation means the content demanded sustained, directed focus. Source: Corbetta & Shulman, 2002, *Nature Reviews Neuroscience*.
+**Voluntary attention control (Dorsal Attention Network)**  
+Use this label when the predicted response is elevated in parcels associated with deliberate top down attention. A higher value suggests the content sustained directed tracking or selection. Source: Corbetta & Shulman, 2002.
 
-**Mind-wandering / attention withdrawal (Default Mode Network)**
-Activates when attention drifts away from the current stimulus. High default mode during content means the brain was disengaging. Source: Buckner et al., 2008, *Annals of the New York Academy of Sciences*.
+**Mind wandering and attention withdrawal (Default Mode Network)**  
+Use this label when parcels associated with internally directed processing are more active. A higher value suggests weaker alignment with externally driven task focus. Source: Buckner et al., 2008.
 
-**Involuntary attention capture (Ventral Attention Network)**
-Activates when something grabs your attention automatically — not by choice. High activation suggests the content had high salience or surprise. Source: Corbetta & Shulman, 2002, *Nature Reviews Neuroscience*.
+**Involuntary attention capture (Ventral Attention Network)**  
+Use this label when parcels associated with stimulus driven reorienting are more active. A higher value suggests salience, surprise, or interruption of an ongoing focus state. Source: Corbetta & Shulman, 2002.
 
-**Cognitive effort / working memory (Frontoparietal Control Network)**
-Activates under high cognitive load — complex reasoning, task switching, holding information in mind. Source: Vincent et al., 2008, *Journal of Neurophysiology*.
+**Cognitive effort and working memory (Frontoparietal Control Network)**  
+Use this label when parcels associated with control, holding information, and task switching are more active. A higher value suggests higher cognitive demand. Source: Vincent et al., 2008.
 
-**Visual processing**
-Early and mid-level visual cortex activation. Driven by visual complexity, motion, and contrast. Source: Wandell et al., 2007, *Neuron*.
+**Visual processing**  
+Use this label when early and intermediate visual parcels are more active. A higher value usually tracks visual complexity, motion, contrast, or scene change. Source: Wandell et al., 2007.
 
-**Auditory / speech processing**
-Primary auditory cortex and speech-selective regions. Driven by speech clarity, music, and audio complexity. Source: Formisano et al., 2003, *Neuron*.
+**Auditory and speech processing**  
+Use this label when auditory and speech selective parcels are more active. A higher value usually tracks spoken language, music, or dense acoustic structure. Source: Formisano et al., 2003.
 
-**Language comprehension**
-Left-lateralized language network. Activates during semantic processing and sentence comprehension. Source: Fedorenko et al., 2011, *PNAS*.
+**Language comprehension**  
+Use this label when left lateralized language related parcels are more active. A higher value suggests stronger semantic and sentence level processing. Source: Fedorenko et al., 2011.
 
 ---
 
 ## Supported inputs
 
-| Input type | Supported |
-|-----------|-----------|
-| YouTube link | Yes |
-| Video file (.mp4, .avi, .mkv, .mov) | Yes |
-| Audio file (.wav, .mp3, .flac) | Yes |
-| Text file (.txt) | Yes |
-| Instagram / TikTok links | No — platform restrictions |
-| Images | No — TRIBE v2 has no image encoder |
+| Input type | Supported | Reason |
+|-----------|-----------|--------|
+| YouTube link | Yes | Downloaded and converted into model ready input |
+| Video file (.mp4, .avi, .mkv, .mov) | Yes | Passed to TRIBE v2 pipeline |
+| Audio file (.wav, .mp3, .flac) | Yes | Passed to TRIBE v2 pipeline |
+| Text file (.txt) | Yes | Passed to TRIBE v2 text pathway |
+| Instagram or TikTok links | No | Platform access restrictions |
+| Images | No | No image only encoder in this setup |
 
 ---
 
-## Setup — run locally on your machine
+## Setup: run locally on your machine
 
 ### Requirements
 
 - Python 3.11 or higher
 - Mac, Linux, or Windows
 - At least 16GB RAM
-- GPU optional but recommended (inference is 30 to 90 seconds on CPU, 10 to 20 seconds on GPU)
+- GPU optional but recommended
 
-### 1. Clone this repo and the TRIBE v2 fork
+Expected runtime:
+- about 30 to 90 seconds on CPU
+- about 10 to 20 seconds on GPU
+
+### 1. Clone this repo and the TRIBE v2 repository
 
 ```bash
 git clone https://github.com/bhj37193/tribe-lens-attention
 cd tribe-lens-attention
 
-# clone TRIBE v2 into the same directory
-git clone https://github.com/bhj37193/tribev2
+git clone https://github.com/facebookresearch/tribev2
 cd tribev2
 pip install -e ".[plotting]"
 cd ..
@@ -114,11 +161,11 @@ cd ..
 pip install -r requirements.txt
 ```
 
-### 3. Download model weights
+### 3. Accept model terms and download weights
 
-Weights download automatically from HuggingFace on first run. This is roughly 8 to 15GB so expect the first launch to take a few minutes depending on your connection. They are cached locally after that.
+Weights download from HuggingFace on first run. The first download is roughly 8 to 15GB.
 
-You need a free HuggingFace account and to accept the model terms at:
+Accept the model terms at:
 https://huggingface.co/facebook/tribev2
 
 Then authenticate:
@@ -134,15 +181,18 @@ huggingface-cli login
 python app.py
 ```
 
-Opens at `http://localhost:7860`
+Default local URL:
+`http://localhost:7860`
 
 ---
 
-## Setup — deploy your own HuggingFace Space
+## Setup: deploy your own HuggingFace Space
 
 ### 1. Create a HuggingFace account and upgrade to Pro
 
-Required for ZeroGPU access. Cost: $9/month.
+Required for ZeroGPU access.
+
+Pricing page:
 https://huggingface.co/pricing
 
 ### 2. Create a new Space
@@ -160,47 +210,50 @@ git push space main
 
 ### 4. Accept TRIBE v2 model terms
 
-Go to https://huggingface.co/facebook/tribev2 and accept the terms so your Space can download the weights.
+Go to:
+https://huggingface.co/facebook/tribev2
+
+Accept the terms so the Space can download the weights.
 
 ### 5. Add your HuggingFace token as a Space secret
 
-In your Space settings, add a secret named `HF_TOKEN` with your HuggingFace access token. This allows the Space to download the gated model weights.
+In Space settings, add a secret named `HF_TOKEN`.
 
-The app will be live at:
+The live URL will be:
 `https://huggingface.co/spaces/YOUR_USERNAME/tribe-lens-attention`
 
 ---
 
 ## Cost to run
 
-### Local (your own machine)
+### Local
 
-**$0/month.** You only need internet to download the weights the first time.
+**$0/month** after you use your own machine and internet connection for the initial model download.
 
-### HuggingFace Space (shared with others or accessible via URL)
+### HuggingFace Space
 
 | Item | Cost |
 |------|------|
 | HuggingFace Pro subscription | $9/month |
-| ZeroGPU compute | Included in Pro (25 min/day H200) |
+| ZeroGPU compute | Included in Pro |
 | Spaces hosting | Included in Pro |
-| Model weights storage | Free (loaded from HuggingFace Hub) |
-| yt-dlp (YouTube download) | Free |
+| Model weight storage | Free from HuggingFace Hub |
+| yt dlp | Free |
 
-**Total: $9/month** for personal use.
+For personal use, that puts the recurring platform cost at **$9/month**.
 
-If you expect heavy usage from multiple users simultaneously, you would need a dedicated GPU instance starting at roughly $0.40/hour ($290/month always-on). For personal use ZeroGPU is sufficient.
+If you expect concurrent heavy use, a dedicated GPU is the more realistic option.
 
 ---
 
 ## Project structure
 
-```
+```text
 tribe-lens-attention/
 ├── app.py                  # Gradio interface
-├── tribe_inference.py      # TribeModel wrapper — loads model, runs predict()
-├── attention_mapper.py     # Maps HCP parcels → attention networks with citations
-├── brain_plot.py           # Renders brain surface image via PlotBrainNilearn
+├── tribe_inference.py      # Loads model and runs predict()
+├── attention_mapper.py     # Maps HCP parcels to attention networks
+├── brain_plot.py           # Renders brain surface image
 ├── requirements.txt
 ├── LICENSE
 └── README.md
@@ -210,45 +263,47 @@ tribe-lens-attention/
 
 ## How it works technically
 
-1. Input (YouTube URL or file) is passed to `TribeModel.get_events_dataframe()`
-2. TRIBE v2 converts the input to word-level events via audio extraction and transcription
-3. `TribeModel.predict()` returns `preds` of shape `(n_segments, 20484)` — predicted fMRI activation across 20,484 cortical vertices on the fsaverage5 mesh, one row per ~2 second TR
-4. Activations are averaged across segments to get a single `(20484,)` vector
-5. `summarize_by_roi()` from `tribev2/utils.py` averages vertex values within each HCP MMP1.0 parcel
-6. Parcel activations are grouped into attention networks using published functional network assignments
-7. Activation levels are normalized relative to the distribution across all parcels and thresholded into LOW / MODERATE / HIGH / VERY HIGH
-8. `PlotBrainNilearn` renders the activation map as a brain surface image
-9. Results are returned to the Gradio interface
+1. The app accepts either a YouTube URL or a local file.
+2. The input is passed to `TribeModel.get_events_dataframe()`.
+3. TRIBE v2 converts the input into model events through extraction and transcription steps when needed.
+4. `TribeModel.predict()` returns a tensor with shape `(n_segments, 20484)`.
+5. The app averages across segments to get one `(20484,)` cortical prediction vector.
+6. `summarize_by_roi()` in `tribev2/utils.py` averages vertices inside each HCP MMP1.0 parcel.
+7. The app groups selected parcels into seven named systems.
+8. It converts relative magnitudes into LOW, MODERATE, HIGH, or VERY HIGH labels.
+9. `PlotBrainNilearn` renders the surface map.
+10. The app returns the image and the summary table.
+
+Every stage above can be inspected in code. The app is not using a hidden rubric such as "viral content" or "good content."
 
 ---
 
 ## Built on
 
-- **TRIBE v2** — Meta Research. d'Ascoli et al., 2026. *A Foundation Model of Vision, Audition, and Language for In-Silico Neuroscience*. https://huggingface.co/facebook/tribev2
-
-- **HCP MMP1.0 Parcellation** — Glasser et al., 2016. *A multi-modal parcellation of human cerebral cortex*. Nature, 536, 171–178.
-
-- **Nilearn** — Abraham et al., 2014. *Machine learning for neuroimaging with scikit-learn*. Frontiers in Neuroinformatics.
+- **TRIBE v2** by Meta Research. d'Ascoli et al., 2026. *A Foundation Model of Vision, Audition, and Language for In Silico Neuroscience*. https://huggingface.co/facebook/tribev2
+- **HCP MMP1.0 Parcellation** by Glasser et al., 2016. *A multi modal parcellation of human cerebral cortex*. Nature, 536, 171 to 178.
+- **Nilearn** by Abraham et al., 2014. *Machine learning for neuroimaging with scikit learn*. Frontiers in Neuroinformatics.
 
 ---
 
 ## License
 
-This project is licensed under **CC-BY-NC-4.0** (Creative Commons Attribution Non-Commercial 4.0 International), inherited from TRIBE v2.
+This project is licensed under **CC BY NC 4.0**.
 
-**You are free to:**
-- Use this code for personal, research, or educational purposes
-- Share and adapt the code with attribution
-- Deploy your own instance for non-commercial use
+You may:
+- use the code for personal, research, or educational work
+- share and adapt it with attribution
+- deploy your own non commercial instance
 
-**You are not permitted to:**
-- Use this code or any derivative for commercial purposes
-- Sell access to this tool or incorporate it into a paid product
-- Remove attribution to Meta Research (TRIBE v2) or this repository
+You may not:
+- use it for commercial purposes
+- sell access to the tool
+- remove attribution to TRIBE v2 or this repository
 
-Full license text: https://creativecommons.org/licenses/by-nc/4.0/
+Full license text:
+https://creativecommons.org/licenses/by-nc/4.0/
 
-If you use this in research or a public project, please cite both TRIBE v2 and this repository.
+If you use the project in research or in a public project, cite both TRIBE v2 and this repository.
 
 ```bibtex
 @article{dAscoli2026TribeV2,
@@ -263,8 +318,13 @@ If you use this in research or a public project, please cite both TRIBE v2 and t
 
 ## Contributing
 
-Issues and pull requests welcome. This is a personal project built on top of Meta Research's TRIBE v2. Please keep contributions within the CC-BY-NC-4.0 license terms.
+Issues and pull requests are welcome.
+
+Contributions should preserve:
+- the research framing
+- the non commercial license terms
+- attribution to upstream work
 
 ---
 
-*Built by [@bhj37193](https://github.com/bhj37193)*
+Built by [@bhj37193](https://github.com/bhj37193)
