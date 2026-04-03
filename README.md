@@ -16,7 +16,7 @@ A personal tool that predicts which attention-relevant brain regions are activat
 
 Paste a YouTube link or upload a video. Get a rendered brain surface image and a plain-English breakdown of predicted cortical activation across attention networks — grounded in peer-reviewed neuroscience.
 
-**Live demo:** [HuggingFace Space](https://huggingface.co/spaces/) *(link once deployed)*
+Deploy your own instance using the instructions below.
 
 ---
 
