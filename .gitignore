@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Model cache and temp files
+cache/
+tmp/
+*.tmp
+tribe_brain_*.png
+
+# MNE data downloaded at runtime
+~/mne_data/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Gradio temp uploads
+gradio_cached_examples/
+flagged/
+
+# Source files used during development (not part of the app)
+files/
+files.zip
+
+# TRIBE v2 source (separate repo — install via pip install -e ./tribev2)
+tribev2/
