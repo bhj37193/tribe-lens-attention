@@ -12,6 +12,10 @@ license: cc-by-nc-4.0
 
 # TRIBE Lens: Attention Analyzer
 
+TRIBE Lens is an unofficial, non commercial research interface built on Meta Research's TRIBE v2.
+
+It is not affiliated with, sponsored by, endorsed by, or granted official status by Meta.
+
 TRIBE Lens takes one input that TRIBE v2 can encode, runs Meta Research's TRIBE v2 model on it, averages the predicted cortical response over time, maps those vertex level predictions onto HCP MMP1.0 parcels, groups selected parcels into named attention related networks, and returns two outputs:
 
 1. a rendered brain surface image
@@ -24,18 +28,44 @@ Accepted inputs:
 - plain text file
 
 Rejected inputs:
-- Instagram and TikTok links
+- Instagram links
+- TikTok links
 - images
 
 This is a research interface for model output inspection. It is not a tool for measuring a specific person's brain state.
 
 ---
 
-## What the tool does
+## Compliance summary
+
+This repository uses and modifies TRIBE v2.
+
+This repository is shared only for non commercial use under CC BY NC 4.0.
+
+If you reuse or share this repository or any modified version of it, you must keep:
+
+- attribution to Meta Research and TRIBE v2
+- the copyright and license notice
+- the warranty disclaimer notice
+- a link to the upstream TRIBE v2 repository or model page when practical
+- a notice that this repository includes modifications
+
+You may not:
+
+- use TRIBE v2 or this repository for commercial purposes
+- imply Meta affiliation, sponsorship, endorsement, or official status
+- remove upstream attribution
+- add terms or technical restrictions that stop downstream users from exercising the CC BY NC 4.0 rights
+
+Patent rights and trademark rights are not granted by the CC BY NC 4.0 license.
+
+---
+
+## What this tool does
 
 TRIBE v2 is a multimodal brain encoding model from Meta Research. Given naturalistic stimuli such as video, audio, or text, it predicts fMRI like cortical responses on the fsaverage5 surface.
 
-This app does not claim to detect attention directly from a webcam, eye tracking stream, or EEG signal. It does one narrower thing.
+This app does not claim to detect attention directly from a webcam, eye tracking stream, or EEG signal.
 
 It takes TRIBE v2's predicted cortical activity and converts that activity into a readable summary across seven named systems:
 
@@ -82,7 +112,7 @@ These outputs are in silico predictions from a population trained model.
 They do not tell you:
 - what a given individual subject actually felt
 - whether a diagnosis is present
-- whether a piece of content is universally "good"
+- whether a piece of content is universally good
 - whether the model captured causation rather than correlation
 
 They do tell you:
@@ -122,9 +152,9 @@ Use this label when left lateralized language related parcels are more active. A
 | Input type | Supported | Reason |
 |-----------|-----------|--------|
 | YouTube link | Yes | Downloaded and converted into model ready input |
-| Video file (.mp4, .avi, .mkv, .mov) | Yes | Passed to TRIBE v2 pipeline |
-| Audio file (.wav, .mp3, .flac) | Yes | Passed to TRIBE v2 pipeline |
-| Text file (.txt) | Yes | Passed to TRIBE v2 text pathway |
+| Video file (.mp4, .avi, .mkv, .mov) | Yes | Passed to the TRIBE v2 pipeline |
+| Audio file (.wav, .mp3, .flac) | Yes | Passed to the TRIBE v2 pipeline |
+| Text file (.txt) | Yes | Passed to the TRIBE v2 text pathway |
 | Instagram or TikTok links | No | Platform access restrictions |
 | Images | No | No image only encoder in this setup |
 
@@ -222,6 +252,12 @@ In Space settings, add a secret named `HF_TOKEN`.
 The live URL will be:
 `https://huggingface.co/spaces/YOUR_USERNAME/tribe-lens-attention`
 
+### 6. Keep the Space non commercial
+
+A public HuggingFace Space is still only allowed under the upstream license when your use stays non commercial.
+
+Do not charge for access, bundle it into a paid product, or market it as an official Meta product.
+
 ---
 
 ## Cost to run
@@ -274,13 +310,29 @@ tribe-lens-attention/
 9. `PlotBrainNilearn` renders the surface map.
 10. The app returns the image and the summary table.
 
-Every stage above can be inspected in code. The app is not using a hidden rubric such as "viral content" or "good content."
+Every stage above can be inspected in code. The app is not using a hidden rubric such as viral content or good content.
+
+---
+
+## Modifications from upstream TRIBE v2
+
+This repository is not a mirror of the upstream TRIBE v2 repository.
+
+It adds project specific code around the upstream model, including:
+
+- a Gradio app interface
+- attention network aggregation from HCP parcels
+- surface rendering and result presentation for this app
+- repo level setup instructions for local use and HuggingFace Spaces
+
+These additions and edits are modifications to the upstream material.
 
 ---
 
 ## Built on
 
 - **TRIBE v2** by Meta Research. d'Ascoli et al., 2026. *A Foundation Model of Vision, Audition, and Language for In Silico Neuroscience*. https://huggingface.co/facebook/tribev2
+- **TRIBE v2 upstream repository**: https://github.com/facebookresearch/tribev2
 - **HCP MMP1.0 Parcellation** by Glasser et al., 2016. *A multi modal parcellation of human cerebral cortex*. Nature, 536, 171 to 178.
 - **Nilearn** by Abraham et al., 2014. *Machine learning for neuroimaging with scikit learn*. Frontiers in Neuroinformatics.
 
@@ -288,7 +340,9 @@ Every stage above can be inspected in code. The app is not using a hidden rubric
 
 ## License
 
-This project is licensed under **CC BY NC 4.0**.
+This repository includes and adapts work released by Meta Research under **CC BY NC 4.0**.
+
+Unless a file states otherwise, this repository is shared under **CC BY NC 4.0** as well so downstream users can comply with the upstream terms.
 
 You may:
 - use the code for personal, research, or educational work
@@ -299,9 +353,25 @@ You may not:
 - use it for commercial purposes
 - sell access to the tool
 - remove attribution to TRIBE v2 or this repository
+- imply Meta sponsorship, endorsement, or official status
+- apply extra legal terms or technical restrictions that block the license rights of downstream users
+
+Required attribution when sharing this repository or modified versions:
+- Meta Research as upstream source for TRIBE v2
+- the TRIBE v2 project name
+- a link to the upstream repository or model page when practical
+- a link to the CC BY NC 4.0 license
+- a note that this repository contains modifications
 
 Full license text:
 https://creativecommons.org/licenses/by-nc/4.0/
+
+Upstream TRIBE v2 license file:
+https://huggingface.co/facebook/tribev2/blob/main/LICENSE
+
+TRIBE v2 is provided as is and as available, without warranties, under the upstream license terms.
+
+Patent rights and trademark rights are not granted by the CC BY NC 4.0 license.
 
 If you use the project in research or in a public project, cite both TRIBE v2 and this repository.
 
@@ -324,6 +394,8 @@ Contributions should preserve:
 - the research framing
 - the non commercial license terms
 - attribution to upstream work
+
+By contributing, you agree that your contributions may be distributed under CC BY NC 4.0 with the rest of the repository unless stated otherwise.
 
 ---
 
